@@ -5,10 +5,9 @@ using Markdown
 using InteractiveUtils
 
 # ╔═╡ b6d1ee8e-e047-11ee-0264-a393c35d00de
-# ╠═╡ show_logs = false
 begin
 	using Pkg
-	cd(".")
+	cd("../")
 	Pkg.activate(".")
 end
 
@@ -23,7 +22,7 @@ end
 
 # ╔═╡ ec122fd6-ae50-4da3-8345-8232a59d2bae
 begin
-	df = DataFrame(CSV.File("sa_who_data.csv"))[2:end, 1:end]
+	df = DataFrame(CSV.File("data/sa_who_data.csv"))[2:end, 1:end]
 	df = df[:, ["2019", "2015", "2010", "2005", "2000"]]
 	rename!(df, ["2019", "2015", "2010", "2005", "2000"])
 	df = parse.(Float64, df)
