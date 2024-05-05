@@ -27,3 +27,8 @@ Graphs can be viewed in `results/`. HTML output of the notebook can be viewed in
 
 ## License
 MIT licensed.
+
+## TODO
+- [ ] Clean-up notebook
+- [ ] Link to article once available
+- [ ] Add summary of results in README
