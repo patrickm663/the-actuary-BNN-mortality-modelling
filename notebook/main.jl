@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.41
+# v0.19.42
 
 using Markdown
 using InteractiveUtils
@@ -25,6 +25,7 @@ begin
 	df = DataFrame(CSV.File("data/sa_who_data.csv"))[2:end, 1:end]
 	df = df[:, ["2019", "2015", "2010", "2005", "2000"]]
 	rename!(df, ["2019", "2015", "2010", "2005", "2000"])
+	select!(df, ["2000", "2005", "2010", "2015", "2019"])
 	df = parse.(Float64, df)
 end
 
@@ -48,6 +49,20 @@ begin
 	end
 	plot!(age_range_int, mean(log.(y); dims=2), label="Average", color=:Red, width=2)
 end
+
+# ╔═╡ e797623d-5ff6-4a74-9522-c4362b0f92e9
+CSV.write(
+	"results/input_data.csv", 
+	DataFrame(
+		age=age_range_int, 
+		log_obs_2000=log.(y)[:, 1],
+		log_obs_2005=log.(y)[:, 2],
+		log_obs_2010=log.(y)[:, 3],
+		log_obs_2015=log.(y)[:, 4],
+		log_obs_2019=log.(y)[:, 5],
+		avg_log_obs=vec(mean(log.(y); dims=2)')
+	)
+)
 
 # ╔═╡ bb40231f-b691-4886-bc4e-cc1fb81a7971
 function lee_carter(d)
@@ -165,6 +180,12 @@ end
 # ╔═╡ 9f26a81b-326a-4938-a946-689b14f70d83
 plot(ch[half_N:end, 1:80:end, :])
 
+# ╔═╡ 8b9bdc26-d605-406b-860b-9fcc8e3ab35c
+savefig(plot(ch[half_N:end, 1:80:end, :]), "results/BNN-posterior-samples.svg")
+
+# ╔═╡ 5d355506-4ab9-47fd-8bc8-300144ce6303
+CSV.write("results/BNN-posterior-samples.csv", ch[half_N:end, 1:80:end, :])
+
 # ╔═╡ 83ce8ad4-2b61-48ef-94f1-b65080a813aa
 describe(ch)
 
@@ -231,7 +252,25 @@ function age_plot(year)
 		scatter!(X, log.(y)[year, :], label="Observations", color=:black, markershape=:circle)
 	end
 
-	savefig(p_, "$(age_range[year])-BNN.svg")
+	savefig(p_, "results/$(age_range[year])-BNN.svg")
+
+
+	BNN_df = DataFrame(
+		periods=Xs_full,
+		nn_pred_mean=vec(nn_pred_mean),
+		nn_pred_median=vec(nn_pred_median),
+		nn_pred_l25=vec(nn_pred_l25),
+		nn_pred_u75=vec(nn_pred_u75)
+	)
+
+	obs_df = DataFrame(
+		periods=vec(X'),
+		log_obs=log.(y)[year, :],
+		log_LC=log_LC[year, :]
+	)
+
+	CSV.write("results/$(age_range[year])-BNN-data.csv", BNN_df)
+	CSV.write("results/$(age_range[year])-Obs-LC-data.csv", obs_df)
 	
 	return p_
 end
@@ -300,6 +339,7 @@ mean((log_LC_s .- ys) .^ 2; dims=1)'
 # ╠═ec122fd6-ae50-4da3-8345-8232a59d2bae
 # ╠═0046858a-1c64-4303-b383-b2202e954d89
 # ╠═2fa42fc5-463a-4644-89ba-97fa0cb63381
+# ╠═e797623d-5ff6-4a74-9522-c4362b0f92e9
 # ╠═bb40231f-b691-4886-bc4e-cc1fb81a7971
 # ╠═60745cc8-02ff-4b17-a531-0bee6d21a321
 # ╠═3280ec10-969e-4861-8229-07d2e79b4de0
@@ -314,6 +354,8 @@ mean((log_LC_s .- ys) .^ 2; dims=1)'
 # ╠═7968a394-a3fc-4ec7-871a-6d6272cf29af
 # ╠═95371d4b-c937-4344-a69f-c9b0f7b12893
 # ╠═9f26a81b-326a-4938-a946-689b14f70d83
+# ╠═8b9bdc26-d605-406b-860b-9fcc8e3ab35c
+# ╠═5d355506-4ab9-47fd-8bc8-300144ce6303
 # ╠═83ce8ad4-2b61-48ef-94f1-b65080a813aa
 # ╠═f4b94fb1-0a0c-456c-af46-2c7a47eb4f6c
 # ╠═f10f309d-1a25-4e67-80f5-9c4dd8978e60
