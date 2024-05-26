@@ -252,7 +252,7 @@ function age_plot(year)
 		scatter!(X, log.(y)[year, :], label="Observations", color=:black, markershape=:circle)
 	end
 
-	savefig(p_, "results/$(age_range[year])-BNN.svg")
+	savefig(p_, "results/$(age_range[year])-BNN.png")
 
 
 	BNN_df = DataFrame(
