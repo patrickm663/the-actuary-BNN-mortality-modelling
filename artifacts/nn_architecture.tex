@@ -4,7 +4,7 @@
 
 \begin{document}
     \begin{neuralnetwork}[height=14]
-        \newcommand{\x}[2]{$x_#2$}
+        \newcommand{\x}[2]{$x$}
 	\newcommand{\Year}[2]{\small$\text{Year}_i$}
 	\newcommand{\y}[2]{$\hat{y}_{#2}$}
         \newcommand{\mort}[2]{$\hat{\mu}_#2$}
@@ -12,9 +12,9 @@
         \newcommand{\hsecond}[2]{\small $h^{(2)}_#2$}
         \newcommand{\hthird}[2]{\small $h^{(3)}_#2$}
 	\inputlayer[count=1, bias=false, title=Input layer:\\Year, text=\x]
-        \hiddenlayer[count=8, bias=false, title=Hidden\\layer 1, text=\hfirst] \linklayers
-        \hiddenlayer[count=8, bias=false, title=Hidden\\layer 2, text=\hsecond] \linklayers
-        \hiddenlayer[count=8, bias=false, title=Hidden\\layer 3, text=\hthird] \linklayers
+	\hiddenlayer[count=8, bias=false, title=\small{Hidden layer 1}, text=\hfirst] \linklayers
+	\hiddenlayer[count=8, bias=false, title=\small{Hidden layer 2}, text=\hsecond] \linklayers
+	\hiddenlayer[count=8, bias=false, title=\small{Hidden layer 3}, text=\hthird] \linklayers
 	\outputlayer[count=14, title=Output layer:\\$\log(\hat{\mu})$, text=\y] \linklayers
     \end{neuralnetwork}
 \end{document}
